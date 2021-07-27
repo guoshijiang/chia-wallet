@@ -44,7 +44,7 @@ if __name__ == "__main__":
         sk=sys.argv[1],
         from_pk=sys.argv[2],
         to_address=sys.argv[3],
-        amount=uint64(int(sys.argv[4]),
+        amount=uint64(int(sys.argv[4])),
         fee=uint64(int(sys.argv[5])),
         coins=json.loads(sys.argv[6]))
     print(tx.create_sign_transaction())
