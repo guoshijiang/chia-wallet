@@ -41,5 +41,11 @@ def create_address(password: str = ""):
     seed = mnemonic_to_seed(mnemonic, password)
     key = AugSchemeMPL.key_gen(seed)
     address = create_address_by_pk(bytes(key.get_g1()).hex())
+    public_key = bytes(key.get_g1()).hex()
     private_key = bytes(key).hex()
-    return mnemonic, address, private_key
+    return {
+        "mnemonic": mnemonic,
+        "address": address,
+        "public_key": public_key,
+        "private_key": private_key,
+    }
