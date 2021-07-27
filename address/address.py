@@ -49,3 +49,7 @@ def create_address(password: str = ""):
         "public_key": public_key,
         "private_key": private_key,
     }
+
+
+if __name__ == "__main__":
+    print(create_address())
