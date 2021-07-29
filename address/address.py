@@ -1,5 +1,6 @@
 # coding:utf-8
 
+from typing import List, Optional, Tuple
 from base.util.byte_types import hexstr_to_bytes
 from blspy import G1Element, PrivateKey, G2Element, AugSchemeMPL
 from base.util.bech32m import decode_puzzle_hash, encode_puzzle_hash
@@ -36,18 +37,31 @@ def address2_puzzle_hash(xch_address: str) -> str:
     return decode_puzzle_hash(xch_address).hex()
 
 
-def create_address(password: str = ""):
+def derive_path(sk: PrivateKey, path: List[int]) -> PrivateKey:
+    for index in path:
+        sk = AugSchemeMPL.derive_child_sk(sk, index)
+    return sk
+
+
+def create_address(password: str = "", index: int = 1):
     mnemonic = generate_mnemonic()
     seed = mnemonic_to_seed(mnemonic, password)
     key = AugSchemeMPL.key_gen(seed)
-    address = create_address_by_pk(bytes(key.get_g1()).hex())
+    path = [12381, 8444, 2, index]
+    child = derive_path(key, path)
+    # g_child = AugSchemeMPL.derive_child_sk(child, 0)
+    address = create_address_by_pk(bytes(child.get_g1()).hex())
     public_key = bytes(key.get_g1()).hex()
     private_key = bytes(key).hex()
+    # child_puk = bytes(child.get_g1()).hex()
+    # child_prk = bytes(child).hex()
     return {
         "mnemonic": mnemonic,
         "address": address,
         "public_key": public_key,
         "private_key": private_key,
+        # "child_puk": child_puk,
+        # "child_prk": child_prk,
     }
 
 
